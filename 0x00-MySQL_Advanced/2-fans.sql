@@ -1,4 +1,4 @@
--- 2-best_band_ever.sql
+-- 2-fans.sql
 -- Task: Rank country origins of bands by the number of (non-unique) fans
 
 -- Rank country origins of bands by the number of (non-unique) fans
