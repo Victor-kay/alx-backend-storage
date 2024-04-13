@@ -180,5 +180,20 @@ class WebCache:
         
         # Cache content with expiration
         self._redis.setex(content_key, 10, content)
+  # Task 4: Retrieving lists - replay
+def replay(method):
+    def wrapper(self):
+        inputs_key = f"{method.__qualname__}:inputs"
+        outputs_key = f"{method.__qualname__}:outputs"
         
+        inputs = self._redis.lrange(inputs_key, 0, -1)
+        outputs = self._redis.lrange(outputs_key, 0, -1)
+        
+        print(f"{method.__qualname__} was called {len(inputs)} times:")
+        
+        for input_args, output in zip(inputs, outputs):
+            args = eval(input_args.decode())  # Convert string representation of args back to tuple
+            print(f"{method.__qualname__}(*{args}) -> {output.decode()}")
+    
+    return wrapper     
         return content
