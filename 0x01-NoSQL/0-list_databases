@@ -1,3 +1,3 @@
 // my comment
 #!/bin/bash
-echo "show dbs" | mongo --quiet | tail -n +4 | head -n -1
+echo 'show dbs' | mongo --quiet | tail -n +4 | head -n -1
