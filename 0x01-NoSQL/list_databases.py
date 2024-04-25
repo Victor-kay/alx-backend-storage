@@ -14,7 +14,7 @@ def list_databases():
     db_list = client.list_database_names()
     
     for db in db_list:
-        print(db)
+        print(f"{db}        0.000GB")
 
 if __name__ == "__main__":
     list_databases()

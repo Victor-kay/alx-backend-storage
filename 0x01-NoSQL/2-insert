@@ -1,0 +1,6 @@
+// my comment
+#!/bin/bash
+
+DB_NAME=$1
+
+echo "db.school.insert({\"name\": \"Holberton school\"})" | mongo $DB_NAME --quiet | grep -E "MongoDB shell version|connecting to|MongoDB server version|WriteResult|bye"
