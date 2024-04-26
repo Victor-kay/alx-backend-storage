@@ -1,0 +1,93 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          mongodb
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Should-Start:      $named
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: An object/document-oriented database
+# Description:       MongoDB is a high-performance, open source, schema-free
+#                    document-oriented data store that's easy to deploy, manage
+#                    and use. It's network accessible, written in C++ and offers
+#                    the following features:
+#
+#                       * Collection oriented storage - easy storage of object-
+#                         style data
+#                       * Full index support, including on inner objects
+#                       * Query profiling
+#                       * Replication and fail-over support
+#                       * Efficient storage of binary data including large
+#                         objects (e.g. videos)
+#                       * Automatic partitioning for cloud-level scalability
+#
+#                    High performance, scalability, and reasonable depth of
+#                    functionality are the goals for the project.
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/mongod
+DESC=database
+
+NAME=mongodb
+CONF=/etc/mongod.conf
+PIDFILE=/var/run/$NAME.pid
+
+# Include mongodb defaults if available.
+if [ -f /etc/default/$NAME ] ; then
+    . /etc/default/$NAME
+fi
+
+# Function to check if the process is running
+running() {
+    [ -f "$PIDFILE" ] && ps -p $(cat "$PIDFILE") > /dev/null 2>&1
+}
+
+# Function to start the MongoDB service
+start_server() {
+    if running; then
+        echo "$DESC is already running."
+        return 0
+    fi
+    echo "Starting $DESC..."
+    $DAEMON --config $CONF
+}
+
+# Function to stop the MongoDB service
+stop_server() {
+    if ! running; then
+        echo "$DESC is not running."
+        return 0
+    fi
+    echo "Stopping $DESC..."
+    kill $(cat "$PIDFILE")
+    rm -f "$PIDFILE"
+}
+
+# Case statement to handle different commands
+case "$1" in
+    start)
+        start_server
+        ;;
+    stop)
+        stop_server
+        ;;
+    restart|reload|force-reload)
+        stop_server
+        start_server
+        ;;
+    status)
+        if running; then
+            echo "$DESC is running."
+        else
+            echo "$DESC is not running."
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit 0
