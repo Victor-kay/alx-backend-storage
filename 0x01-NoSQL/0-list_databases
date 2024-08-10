@@ -1,3 +1,15 @@
-// my comment
-#!/bin/bash
-echo 'show dbs' | mongo --quiet | tail -n +4 | head -n -1
+#!/usr/bin/env python3
+
+"""This script lists all databases in a MongoDB instance."""
+
+from pymongo import MongoClient
+
+def list_databases():
+    """Connects to MongoDB and prints all database names."""
+    client = MongoClient('mongodb://localhost:27017/')
+    databases = client.list_database_names()
+    for db_name in databases:
+        print(db_name)
+
+if __name__ == "__main__":
+    list_databases()
